@@ -2,3 +2,8 @@ __pycache__/
 *.pyc
 *.pyo
 .DS_Store
+memory/conversations/*.jsonl
+memory/records.jsonl
+memory/decisions.jsonl
+memory/summaries.jsonl
+memory/backups/
