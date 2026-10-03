@@ -184,6 +184,8 @@ class MemoryStore:
             words = _meaningful_words(candidate.content)
             match_index = None
             for index, existing in enumerate(merged):
+                if candidate.category != existing.category:
+                    continue
                 prior = _meaningful_words(existing.content)
                 union = words | prior
                 similarity = len(words & prior) / max(1, len(union))
@@ -239,6 +241,17 @@ class MemoryStore:
             ]
 
         result = []
+        is_development = (
+            path.name in {"self_developed.txt", "development_history.txt"}
+            or path.parent.name == "self_development"
+        )
+        category = (
+            "learned_behavior"
+            if is_development
+            else "relationship"
+            if path.name == "relationship_memory.txt"
+            else "factual"
+        )
         for raw in candidates:
             try:
                 content = _validate_content(raw, maximum=1200, minimum=5)
@@ -251,9 +264,7 @@ class MemoryStore:
                 MemoryRecord(
                     id=f"legacy-{fingerprint}",
                     content=content,
-                    category="learned_behavior" if path.name in {
-                        "self_developed.txt", "development_history.txt"
-                    } or path.parent.name == "self_development" else "factual",
+                    category=category,
                     source="legacy_unverified",
                     confidence=0.35,
                     created_at="",

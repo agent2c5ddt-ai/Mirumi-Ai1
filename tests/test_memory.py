@@ -67,6 +67,18 @@ class MemoryStoreTests(unittest.TestCase):
         self.assertTrue(self.store.approve(candidates[0].id))
         self.assertEqual(1, len(self.store.retrieve("quiet nature", limit=5)))
 
+    def test_legacy_relationship_notes_keep_their_category(self):
+        (self.root / "relationship_memory.txt").write_text(
+            "The user prefers gentle check-ins.\n",
+            encoding="utf-8",
+        )
+
+        candidates = self.store.pending()
+
+        self.assertEqual(1, len(candidates))
+        self.assertEqual("relationship", candidates[0].category)
+        self.assertEqual("legacy_unverified", candidates[0].source)
+
     def test_malformed_jsonl_is_skipped_without_losing_valid_records(self):
         self.store.records_path.parent.mkdir(parents=True, exist_ok=True)
         valid = {

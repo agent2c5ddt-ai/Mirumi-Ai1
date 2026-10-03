@@ -74,6 +74,10 @@ Normal assistant output is never automatically promoted to a fact.
   source conversation remains in its original JSONL file.
 - `/backup` copies current memory and legacy development files under
   `memory/backups/`.
+- Before recovery, run `/backup` to preserve current state and stop Mirumi.
+  Then copy the chosen snapshot's files back to the matching relative paths.
+  Recovery is deliberately manual so an old snapshot cannot silently overwrite
+  newer records; compare JSONL files before replacing or merging them.
 
 New runtime JSONL files, future conversation sessions, and local backups are
 ignored by Git. The already tracked legacy conversation file remains in
